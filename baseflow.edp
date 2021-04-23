@@ -4,11 +4,7 @@
 include "getARGV.idp"
 real Re = getARGV("-Re",10.0);
 verbosity = 0;
-load "iovtk"
-include "./freefem_matlab_octave_plot-public/release-v2.0/demos/ffmatlib.idp"
 real ni=1/Re;
-
-
 
 //reading mesh
 mesh Th = readmesh("Flows/mesh.msh");
