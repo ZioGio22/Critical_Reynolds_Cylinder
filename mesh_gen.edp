@@ -1,0 +1,38 @@
+verbosity = 0;
+
+////// Mesh
+int ncil=150, ns=5, n1=20, n2=10;
+int n=8;
+real xinfm=-25., xinfv=50., yinf=20.;
+real x1m=-5.,x1v=17.,y1=2.5;
+real x2m=-8.,x2v=30.,y2=5;
+
+// cylinder
+int bclat=4; int bcinlet=1; int bcoutflow=3;
+int bcwall=2;
+
+border cilindro(t=0,2*pi){ x=cos(t)*0.5;y=0.5*sin(t);label=2;}
+border cil2(t=0,2*pi){ x=cos(t)*0.57;y=0.57*sin(t);label=0;}
+border inlet(t=0,1){ x=xinfm;y=yinf*(1-2*t);label=1;}
+border latinf(t=0,1){ x=xinfm+(xinfv-xinfm)*t;y=-yinf;label=4;}
+border outlet(t=0,1){ x=xinfv;y=-yinf*(1-2*t);label=3;}
+border latsup(t=0,1){ x=xinfv-(xinfv-xinfm)*t;y=yinf;label=4;}
+border a1(t=0,1){ x=x1m;y=y1*(1-2*t);label=0;}
+border a2(t=0,1){ x=x1m+(x1v-x1m)*t;y=-y1;label=0;}
+border a3(t=0,1){ x=x1v;y=-y1*(1-2*t);label=0;}
+border a4(t=0,1){ x=x1v-(x1v-x1m)*t;y=+y1;label=0;}
+border b1(t=0,1){ x=x2m;y=y2*(1-2*t);label=0;}
+border b2(t=0,1){ x=x2m+(x2v-x2m)*t;y=-y2;label=0;}
+border b3(t=0,1){ x=x2v;y=-y2*(1-2*t);label=0;}
+border b4(t=0,1){ x=x2v-(x2v-x2m)*t;y=+y2;label=0;}
+
+mesh Th=buildmesh(inlet(2*yinf/n*ns)+latinf((xinfv-xinfm)/n*ns)+outlet(2*yinf/n*ns)+latsup((xinfv-xinfm)/n*ns)+cil2(-100)+cilindro(-300)+a1(n1/n*2*y1)+a2(n1/n*(x1v-x1m))+a3(n1/n*2*y1)+a4(n1/n*(x1v-x1m))+b1(2*y2/n*n2)+b2((x2v-x2m)/n*n2)+b3(2*y2/n*n2)+b4((x2v-x2m)/n*n2));
+
+//functional space
+//finite element spaces
+fespace Vh(Th,P2); //
+fespace Ph(Th,P1); //
+fespace VPh(Th,[P2,P2,P1]);
+
+//save mesh
+savemesh(Th, "Flows/mesh.msh");
