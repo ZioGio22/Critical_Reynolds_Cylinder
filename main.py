@@ -6,25 +6,25 @@ import matplotlib.pyplot as plt
 
 #preliminary
 subprocess.Popen("mkdir -p Flows", shell=True)
-subprocess.call("Echo. > Results.txt", shell = True)
+subprocess.run("Echo. > Results.txt", shell = True)
 
 #mesh generation
 mesh_gen = "FreeFem++ FF++solvers/mesh_gen.edp"
-subprocess.call(mesh_gen, shell = True)
+subprocess.run(mesh_gen, shell = True)
 
 #selecting Reynolds number between 45 and 49 (instability appears at Re = 47)
 Re_test = np.linspace(45.,49.,10)
 
 #initial guess (Stokes's flow)
 ig = "FreeFem++ FF++solvers/initial_guess.edp"
-subprocess.call(ig, shell = True)
+subprocess.run(ig, shell = True)
 
 #loop over Reynolds numbers
 for i in Re_test:
     bf = "FreeFem++ FF++solvers/baseflow.edp -Re "+ str(i)
-    subprocess.call(bf, shell = True)
+    subprocess.run(bf, shell = True)
     ei = "mpirun -np 1 FreeFem++-mpi FF++solvers/eig_eval.edp -Re "+ str(i)
-    subprocess.call(ei, shell = True)
+    subprocess.run(ei, shell = True)
 
 # plotting the Results
 #read the Eigenvalues
